@@ -6,46 +6,44 @@
 #    By: ral-bakr <ral-bakr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/22 12:30:28 by ral-bakr          #+#    #+#              #
-#    Updated: 2024/07/22 12:33:44 by ral-bakr         ###   ########.fr        #
+#    Updated: 2024/07/29 18:37:54 by ral-bakr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
-					ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c \
-					ft_memcpy.c ft_strlcpy.c ft_strlcat.c \
-					ft_toupper.c ft_tolower.c ft_strchr.c ft_strrchr.c \
-					ft_strncmp.c ft_memchr.c ft_memmove.c ft_memcmp.c ft_strnstr.c \
-					ft_atoi.c ft_calloc.c ft_strdup.c ft_substr.c \
-					ft_strjoin.c ft_strtrim.c ft_putchar_fd.c ft_putstr_fd.c \
-					ft_putendl_fd.c ft_putnbr_fd.c ft_striteri.c ft_strmapi.c \
-					ft_itoa.c ft_split.c
+SRCS			=	client.c server.c
+
+SERVER_NAME= server
+CLIENT_NAME= client
+OBJECT_SERVER= server.o
+OBJECT_CLIENT= client.o
+LIBFT_DIR= LIB_FT
+LIBFT_RESULT= libft.a 
 
 OBJS			= $(SRCS:.c=.o)
-
-BONUS			=	ft_lstadd_back.c ft_lstadd_front.c ft_lstnew.c ft_lstsize.c ft_lstlast.c ft_lstdelone.c ft_lstclear.c\
-
-BONUS_OBJS		= $(BONUS:.c=.o)
 
 CC				= cc
 RM				= rm -f
 CFLAGS			= -Wall -Wextra -Werror -I.
 
-NAME			= libft.a
+all:			$(LIBFT_RESULT) $(SERVER_NAME) $(CLIENT_NAME)
 
-all:			$(NAME)
-
-$(NAME):		$(OBJS)
-				ar rcs $(NAME) $(OBJS)
+$(LIBFT_RESULT):
+				@make -C $(LIBFT_DIR)
+				
+$(SERVER_NAME): $(OBJECT_SERVER)
+				$(CC) $(CFLAGS) $(OBJECT_SERVER) -o $@ $(LIBFT_DIR)/$(LIBFT_RESULT)
+				
+$(CLIENT_NAME): $(OBJECT_CLIENT)
+				$(CC) $(CFLAGS) $(OBJECT_CLIENT) -o $@ $(LIBFT_DIR)/$(LIBFT_RESULT)				
 
 clean:
-				$(RM) $(OBJS) $(BONUS_OBJS)
+				$(RM) $(OBJS)
+				make -C $(LIBFT_DIR) clean
 
 fclean:			clean
-				$(RM) $(NAME)
+				$(RM) $(SERVER_NAME) $(CLIENT_NAME) 
+				Make -C $(LIBFT_DIR) clean
 
-re:				fclean $(NAME)
-
-bonus:			$(BONUS_OBJS)
-				ar rcs $(NAME) $(BONUS_OBJS)
+re:				fclean all
 
 .PHONY:			all clean fclean re bonus
